@@ -6,8 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
-import { GraduationCap, BarChart3, BookOpen, Briefcase, HelpingHand, NotebookPen } from "lucide-react";
+import { GraduationCap, BarChart3, BookOpen, Briefcase, HelpingHand, NotebookPen, CheckCircle2, Quote } from "lucide-react";
 import { SeoHead } from "@/components/SeoHead";
+import logo from "@/assets/sir-logo.png";
 
 const SERVICES = [
   { key: "Statistical Analysis", icon: BarChart3, desc: "Advanced data analysis, tests, and results interpretation." },
@@ -70,16 +71,39 @@ const Index = () => {
     return () => el.removeEventListener("mousemove", onMove);
   }, []);
 
-  const jsonLd = useMemo(() => ({
+  const notifyEmail = (localStorage.getItem("sir_notify_email") || "info@sirstudio.in");
+
+  const faqJsonLd = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Do you help with full thesis writing?",
+        acceptedAnswer: { "@type": "Answer", text: "Yes, from proposal to final submission, including formatting and plagiarism checks." }
+      },
+      {
+        "@type": "Question",
+        name: "Can you run advanced statistical tests?",
+        acceptedAnswer: { "@type": "Answer", text: "Absolutely. We support SPSS, R, Python, and more with clear explanations." }
+      },
+      {
+        "@type": "Question",
+        name: "How quickly can I get help?",
+        acceptedAnswer: { "@type": "Answer", text: "Typically within 24 hours. Urgent requests can be prioritized." }
+      }
+    ]
+  }), []);
+
+  const orgJsonLd = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "SIR STUDIO",
-    url: window.location.origin,
-    email: "info@sirstudio.in",
-    sameAs: [],
+    url: typeof window !== 'undefined' ? window.location.origin : "",
+    email: notifyEmail,
     description:
       "Academic partner for thesis writing, statistical analysis, research writing, academic help, career counselling, exam preparation, and CSR activities.",
-  }), []);
+  }), [notifyEmail]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,15 +132,15 @@ const Index = () => {
           mode: "no-cors",
           body: JSON.stringify({
             type: "lead_inquiry",
-            toEmail: "info@sirstudio.in",
+            toEmail: notifyEmail,
             payload: inquiry,
-            source: window.location.href,
+            source: typeof window !== 'undefined' ? window.location.href : "",
           }),
         });
         toast("Thank you! Your details were sent to our support team.");
       } else {
         toast(
-          "Saved locally. Add a Zapier webhook in the Admin dashboard to auto-email info@sirstudio.in.",
+          "Saved locally. Add a Zapier webhook in the Admin dashboard to auto-email your address.",
         );
       }
 
@@ -142,12 +166,16 @@ const Index = () => {
 
       <header className="border-b">
         <div className="container flex h-16 items-center justify-between">
-          <a href="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-md bg-[hsl(var(--brand))]" aria-hidden />
+          <a href="/" className="flex items-center gap-3" aria-label="SIR STUDIO home">
+            <img src={logo} alt="SIR STUDIO logo" className="h-8 w-8" loading="lazy" />
             <span className="text-lg font-semibold">SIR STUDIO</span>
           </a>
           <nav className="hidden gap-6 md:flex">
             <a href="#services" className="hover:text-primary">Services</a>
+            <a href="#about" className="hover:text-primary">About</a>
+            <a href="#process" className="hover:text-primary">Process</a>
+            <a href="#testimonials" className="hover:text-primary">Testimonials</a>
+            <a href="#faq" className="hover:text-primary">FAQ</a>
             <a href="#contact" className="hover:text-primary">Contact</a>
             <a href="/admin" className="hover:text-primary">Admin</a>
           </nav>
@@ -199,6 +227,109 @@ const Index = () => {
           </div>
         </section>
 
+        {/* About */}
+        <section id="about" className="border-t bg-muted/30">
+          <div className="container py-14 md:py-20 grid gap-10 md:grid-cols-2">
+            <article>
+              <h2 className="text-3xl font-semibold">About SIR STUDIO</h2>
+              <p className="mt-4 text-muted-foreground">
+                We partner with scholars at every step of their academic journey—from shaping research questions to polishing final submissions.
+                Our approach blends rigorous methodology with clear communication and timely delivery.
+              </p>
+              <ul className="mt-6 space-y-3 text-sm">
+                {["Expert academic consultants","On-time delivery","Confidential & secure","Personalized guidance"].map((f) => (
+                  <li key={f} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary" />{f}</li>
+                ))}
+              </ul>
+            </article>
+            <Card className="shadow-[var(--shadow-elevated)]">
+              <CardHeader>
+                <CardTitle>Why students choose us</CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-4 sm:grid-cols-2">
+                {[
+                  { t: "Thesis to Publication", d: "From structure to journal readiness." },
+                  { t: "Clarity in Analysis", d: "Actionable insights from complex data." },
+                  { t: "Ethical Guidance", d: "Transparent, responsible support." },
+                  { t: "Responsive Support", d: "We align with your timelines." },
+                ].map((x) => (
+                  <div key={x.t}>
+                    <div className="font-medium">{x.t}</div>
+                    <div className="text-sm text-muted-foreground">{x.d}</div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Process */}
+        <section id="process" className="container py-14 md:py-20">
+          <h2 className="text-3xl font-semibold">How it works</h2>
+          <div className="mt-8 grid gap-6 md:grid-cols-4">
+            {[
+              { s: "1", t: "Consult", d: "Understand goals, scope, and timelines." },
+              { s: "2", t: "Plan", d: "Define approach, deliverables, and milestones." },
+              { s: "3", t: "Execute", d: "Writing, analysis, and iterations with feedback." },
+              { s: "4", t: "Deliver", d: "Finalize, format, and prepare for submission." },
+            ].map((p) => (
+              <Card key={p.s} className="text-center">
+                <CardHeader>
+                  <div className="mx-auto h-10 w-10 rounded-full bg-secondary flex items-center justify-center font-semibold">{p.s}</div>
+                  <CardTitle className="text-lg">{p.t}</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-muted-foreground">{p.d}</CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section id="testimonials" className="border-t bg-muted/30">
+          <div className="container py-14 md:py-20">
+            <h2 className="text-3xl font-semibold">What our students say</h2>
+            <div className="mt-8 grid gap-6 md:grid-cols-3">
+              {[
+                { q: "Clear guidance from research design to defense.", a: "Mansi, MBA" },
+                { q: "My data analysis finally made sense.", a: "Rahul, M.Tech" },
+                { q: "On-time support that boosted my confidence.", a: "Sara, PhD" },
+              ].map((t) => (
+                <Card key={t.a} className="relative">
+                  <Quote className="absolute -top-3 -left-3 h-6 w-6 text-primary/40" />
+                  <CardContent className="pt-6 text-muted-foreground">“{t.q}”
+                    <div className="mt-3 text-foreground font-medium">{t.a}</div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section id="faq" className="container py-14 md:py-20">
+          <h2 className="text-3xl font-semibold">Frequently asked questions</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {[{
+              q: "Do you help with full thesis writing?",
+              a: "Yes, from proposal to final submission, including formatting and plagiarism checks."
+            },{
+              q: "Can you run advanced statistical tests?",
+              a: "Absolutely. We support SPSS, R, Python, and more with clear explanations."
+            },{
+              q: "How quickly can I get help?",
+              a: "Typically within 24 hours. Urgent requests can be prioritized."
+            },{
+              q: "Do you sign NDAs?",
+              a: "Yes, confidentiality and ethics are core to our work."
+            }].map((f) => (
+              <details key={f.q} className="rounded-md border bg-card p-4">
+                <summary className="cursor-pointer font-medium">{f.q}</summary>
+                <div className="mt-2 text-sm text-muted-foreground">{f.a}</div>
+              </details>
+            ))}
+          </div>
+        </section>
+
         {/* Contact / Lead form */}
         <section id="contact" className="border-t bg-muted/30">
           <div className="container py-14 md:py-20 grid gap-10 md:grid-cols-2">
@@ -206,7 +337,7 @@ const Index = () => {
               <h2 className="text-3xl font-semibold">Start your journey</h2>
               <p className="mt-2 text-muted-foreground">
                 Fill out the form and our academic consultant will reach out shortly.
-                We’ll also notify our team at info@sirstudio.in.
+                We’ll also notify our team at {notifyEmail}.
               </p>
 
               <div className="mt-6 text-sm text-muted-foreground">
@@ -271,7 +402,11 @@ const Index = () => {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
     </div>
   );

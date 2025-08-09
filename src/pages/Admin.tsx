@@ -30,12 +30,15 @@ const SERVICES = [
 
 export default function Admin() {
   const [webhookUrl, setWebhookUrl] = useState("");
+  const [notifyEmail, setNotifyEmail] = useState("");
   const [filter, setFilter] = useState("All");
   const [rows, setRows] = useState<Inquiry[]>([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem("sir_webhook_url");
-    if (saved) setWebhookUrl(saved);
+    const savedWebhook = localStorage.getItem("sir_webhook_url");
+    if (savedWebhook) setWebhookUrl(savedWebhook);
+    const savedEmail = localStorage.getItem("sir_notify_email") || "info@sirstudio.in";
+    setNotifyEmail(savedEmail);
     const list: Inquiry[] = JSON.parse(localStorage.getItem("sir_inquiries") || "[]");
     setRows(list);
   }, []);
@@ -45,9 +48,10 @@ export default function Admin() {
     return rows.filter((r) => r.service === filter);
   }, [filter, rows]);
 
-  const saveWebhook = () => {
+  const saveConfig = () => {
     localStorage.setItem("sir_webhook_url", webhookUrl.trim());
-    toast("Webhook saved");
+    localStorage.setItem("sir_notify_email", notifyEmail.trim());
+    toast("Settings saved");
   };
 
   const markHandled = (id: string, handled: boolean) => {
@@ -66,7 +70,7 @@ export default function Admin() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         mode: "no-cors",
-        body: JSON.stringify({ type: "resend_lead", toEmail: "info@sirstudio.in", payload: row }),
+        body: JSON.stringify({ type: "resend_lead", toEmail: notifyEmail, payload: row }),
       });
       toast("Request sent. Check your Zap's history.");
     } catch (e) {
@@ -93,7 +97,7 @@ export default function Admin() {
     <div className="min-h-screen bg-background">
       <SeoHead
         title="Admin – SIR STUDIO Inquiries Dashboard"
-        description="View and manage SIR STUDIO inquiries. Configure Zapier webhook to email info@sirstudio.in."
+        description="View and manage SIR STUDIO inquiries. Configure Zapier webhook to email your chosen address."
         canonical="/admin"
       />
 
@@ -108,18 +112,36 @@ export default function Admin() {
         <section>
           <Card className="shadow-[var(--shadow-elevated)]">
             <CardHeader>
-              <CardTitle>Notifications via Zapier</CardTitle>
+              <CardTitle>Secure this dashboard</CardTitle>
               <CardDescription>
-                Add a Webhook URL from a Zap with a Webhooks by Zapier trigger. We'll POST the inquiry so your Zap can email info@sirstudio.in.
+                To add real authentication and persistent storage, please connect Supabase in Lovable (top right) and let me know to enable protected admin access and email functions.
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4 md:grid-cols-[1fr_auto]">
-              <div className="space-y-2">
+            <CardContent>
+              <a className="text-primary underline" href="https://docs.lovable.dev/integrations/supabase/" target="_blank" rel="noreferrer">Read how to connect Supabase</a>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section>
+          <Card className="shadow-[var(--shadow-elevated)]">
+            <CardHeader>
+              <CardTitle>Notifications</CardTitle>
+              <CardDescription>
+                Add a Zapier Webhook URL and your recipient email. New inquiries will be POSTed to your Zap so it can send the email.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-4 md:grid-cols-3">
+              <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="webhook">Zapier Webhook URL</Label>
                 <Input id="webhook" placeholder="https://hooks.zapier.com/..." value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} />
               </div>
-              <div className="flex items-end">
-                <Button onClick={saveWebhook} variant="gradient">Save</Button>
+              <div className="space-y-2">
+                <Label htmlFor="notifyEmail">Recipient email</Label>
+                <Input id="notifyEmail" placeholder="info@sirstudio.in" value={notifyEmail} onChange={(e) => setNotifyEmail(e.target.value)} />
+              </div>
+              <div className="md:col-span-3">
+                <Button onClick={saveConfig} variant="gradient">Save settings</Button>
               </div>
             </CardContent>
           </Card>
