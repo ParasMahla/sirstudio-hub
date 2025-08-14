@@ -6,8 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
-import { GraduationCap, BarChart3, BookOpen, Briefcase, HelpingHand, NotebookPen, CheckCircle2, Quote } from "lucide-react";
+import { GraduationCap, BarChart3, BookOpen, Briefcase, HelpingHand, NotebookPen, CheckCircle2, Quote, MessageCircle } from "lucide-react";
 import { SeoHead } from "@/components/SeoHead";
+import { supabase } from "@/integrations/supabase/client";
+import WhatsAppButton from "@/components/WhatsAppButton";
+import { Link } from "react-router-dom";
 import logo from "@/assets/sir-logo.png";
 
 const SERVICES = [
@@ -71,7 +74,7 @@ const Index = () => {
     return () => el.removeEventListener("mousemove", onMove);
   }, []);
 
-  const notifyEmail = (localStorage.getItem("sir_notify_email") || "info@sirstudio.in");
+  const notifyEmail = "info@sirstudio.com";
 
   const faqJsonLd = useMemo(() => ({
     "@context": "https://schema.org",
@@ -112,45 +115,59 @@ const Index = () => {
       return;
     }
 
-    const inquiry: Inquiry = {
-      id: crypto.randomUUID(),
-      name,
-      email,
-      service,
-      message: message || undefined,
-      createdAt: new Date().toISOString(),
-    };
-
     setLoading(true);
-    saveInquiry(inquiry);
 
     try {
-      if (webhookUrl) {
-        await fetch(webhookUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          mode: "no-cors",
-          body: JSON.stringify({
-            type: "lead_inquiry",
-            toEmail: notifyEmail,
-            payload: inquiry,
-            source: typeof window !== 'undefined' ? window.location.href : "",
-          }),
+      // Save to Supabase database
+      const { error } = await supabase
+        .from('inquiries')
+        .insert({
+          name,
+          email,
+          service,
+          message: message || null,
+          status: 'pending'
         });
-        toast("Thank you! Your details were sent to our support team.");
-      } else {
-        toast(
-          "Saved locally. Add a Zapier webhook in the Admin dashboard to auto-email your address.",
-        );
+
+      if (error) throw error;
+
+      // Try Zapier webhook if available
+      if (webhookUrl) {
+        try {
+          await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            mode: "no-cors",
+            body: JSON.stringify({
+              type: "lead_inquiry",
+              toEmail: notifyEmail,
+              payload: { name, email, service, message },
+              source: typeof window !== 'undefined' ? window.location.href : "",
+            }),
+          });
+        } catch (webhookError) {
+          console.warn("Webhook failed, but inquiry saved to database:", webhookError);
+        }
       }
 
+      toast("Thank you! Your inquiry has been submitted successfully.");
       setName("");
       setEmail("");
       setService("");
       setMessage("");
     } catch (err) {
       console.error(err);
-      toast("We couldn't send your request. Please try again.");
+      // Fallback to localStorage if database fails
+      const inquiry: Inquiry = {
+        id: crypto.randomUUID(),
+        name,
+        email,
+        service,
+        message: message || undefined,
+        createdAt: new Date().toISOString(),
+      };
+      saveInquiry(inquiry);
+      toast("Saved locally. Database connection issue - please try again later.");
     } finally {
       setLoading(false);
     }
@@ -177,7 +194,7 @@ const Index = () => {
             <a href="#testimonials" className="hover:text-primary">Testimonials</a>
             <a href="#faq" className="hover:text-primary">FAQ</a>
             <a href="#contact" className="hover:text-primary">Contact</a>
-            <a href="/admin" className="hover:text-primary">Admin</a>
+            <Link to="/auth" className="hover:text-primary">Admin</Link>
           </nav>
         </div>
       </header>
@@ -201,6 +218,11 @@ const Index = () => {
               <Button asChild variant="hero" size="lg">
                 <a href="#services">Explore Services</a>
               </Button>
+              <WhatsAppButton 
+                message="Hi SIR STUDIO! I need help with my thesis and academic work. Can we discuss my requirements?"
+                size="lg"
+                className="bg-[#25D366] hover:bg-[#22C55E] text-white border-[#25D366]"
+              />
             </div>
           </div>
         </section>
@@ -221,7 +243,14 @@ const Index = () => {
                   </div>
                   <CardTitle className="text-lg">{key}</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-muted-foreground">{desc}</CardContent>
+                <CardContent className="space-y-3">
+                  <p className="text-sm text-muted-foreground">{desc}</p>
+                  <WhatsAppButton 
+                    message={`Hi SIR STUDIO! I need help with ${key}. Can we discuss my requirements?`}
+                    size="sm"
+                    className="w-full"
+                  />
+                </CardContent>
               </Card>
             ))}
           </div>
@@ -376,9 +405,16 @@ const Index = () => {
                     <Label htmlFor="message">Your message (optional)</Label>
                     <Textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Share your needs or timelines" rows={4} />
                   </div>
-                  <Button type="submit" variant="gradient" size="lg" disabled={loading}>
-                    {loading ? "Submitting..." : "Submit"}
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button type="submit" variant="gradient" size="lg" disabled={loading} className="flex-1">
+                      {loading ? "Submitting..." : "Submit"}
+                    </Button>
+                    <WhatsAppButton 
+                      message={`Hi! I'd like to discuss my academic needs. Name: ${name}, Email: ${email}, Service: ${service}${message ? `, Message: ${message}` : ''}`}
+                      size="lg"
+                      className="px-6"
+                    />
+                  </div>
                 </form>
                 <p className="mt-3 text-xs text-muted-foreground">
                   By submitting, you agree to be contacted regarding your request.
@@ -395,10 +431,14 @@ const Index = () => {
           <div className="flex gap-6">
             <a href="#services" className="hover:text-primary">Services</a>
             <a href="#contact" className="hover:text-primary">Contact</a>
-            <a href="/admin" className="hover:text-primary">Admin</a>
+            <Link to="/auth" className="hover:text-primary">Admin</Link>
+            <WhatsAppButton message="Hi SIR STUDIO! I'd like to know more about your services." className="text-xs h-auto py-1 px-2" />
           </div>
         </div>
       </footer>
+
+      {/* Floating WhatsApp Button */}
+      <WhatsAppButton variant="floating" message="Hi SIR STUDIO! I need academic support. Can we chat?" />
 
       <script
         type="application/ld+json"
