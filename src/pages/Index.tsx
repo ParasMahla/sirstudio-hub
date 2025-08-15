@@ -55,6 +55,7 @@ const Index = () => {
   const { url: webhookUrl } = useZapierWebhook();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [service, setService] = useState<string>("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -124,6 +125,7 @@ const Index = () => {
         .insert({
           name,
           email,
+          phone: phone || null,
           service,
           message: message || null,
           status: 'pending'
@@ -141,7 +143,7 @@ const Index = () => {
             body: JSON.stringify({
               type: "lead_inquiry",
               toEmail: notifyEmail,
-              payload: { name, email, service, message },
+              payload: { name, email, phone, service, message },
               source: typeof window !== 'undefined' ? window.location.href : "",
             }),
           });
@@ -153,6 +155,7 @@ const Index = () => {
       toast("Thank you! Your inquiry has been submitted successfully.");
       setName("");
       setEmail("");
+      setPhone("");
       setService("");
       setMessage("");
     } catch (err) {
@@ -389,6 +392,10 @@ const Index = () => {
                     <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
                   </div>
                   <div className="space-y-2">
+                    <Label htmlFor="phone">Phone number (optional)</Label>
+                    <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Your phone number" />
+                  </div>
+                  <div className="space-y-2">
                     <Label>Service of interest</Label>
                     <Select value={service} onValueChange={setService}>
                       <SelectTrigger>
@@ -410,7 +417,7 @@ const Index = () => {
                       {loading ? "Submitting..." : "Submit"}
                     </Button>
                     <WhatsAppButton 
-                      message={`Hi! I'd like to discuss my academic needs. Name: ${name}, Email: ${email}, Service: ${service}${message ? `, Message: ${message}` : ''}`}
+                      message={`Hi! I'd like to discuss my academic needs. Name: ${name}, Email: ${email}${phone ? `, Phone: ${phone}` : ''}, Service: ${service}${message ? `, Message: ${message}` : ''}`}
                       size="lg"
                       className="px-6"
                     />
