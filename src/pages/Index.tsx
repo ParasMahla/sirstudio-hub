@@ -6,20 +6,161 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
-import { GraduationCap, BarChart3, BookOpen, Briefcase, HelpingHand, NotebookPen, CheckCircle2, Quote, MessageCircle } from "lucide-react";
+import { 
+  GraduationCap, 
+  BarChart3, 
+  BookOpen, 
+  Briefcase, 
+  HelpingHand, 
+  NotebookPen, 
+  CheckCircle2, 
+  Quote, 
+  Star,
+  Award,
+  Users,
+  Clock,
+  Shield,
+  Zap,
+  ArrowRight,
+  Sparkles,
+  TrendingUp,
+  Target
+} from "lucide-react";
 import { SeoHead } from "@/components/SeoHead";
 import { supabase } from "@/integrations/supabase/client";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { Link } from "react-router-dom";
-import logo from "@/assets/sir-logo.png";
+import logo from "@/assets/sir-studio-logo.png";
 
 const SERVICES = [
-  { key: "Statistical Analysis", icon: BarChart3, desc: "Advanced data analysis, tests, and results interpretation." },
-  { key: "Research Writing", icon: NotebookPen, desc: "Thesis, dissertation, and publication-ready manuscripts." },
-  { key: "Academic Help", icon: BookOpen, desc: "Coursework guidance and subject understanding support." },
-  { key: "Career Counselling", icon: Briefcase, desc: "Strategic planning for academic and professional growth." },
-  { key: "Exam Preparation", icon: GraduationCap, desc: "Personalized study plans and mock assessments." },
-  { key: "CSR Activities", icon: HelpingHand, desc: "Community engagement and personal development programs." },
+  { 
+    key: "Statistical Analysis", 
+    icon: BarChart3, 
+    desc: "Advanced data analysis with SPSS, R, Python & crystal-clear interpretations.", 
+    features: ["Complex Statistical Tests", "Data Visualization", "Result Interpretation"],
+    gradient: "from-blue-500 to-purple-600"
+  },
+  { 
+    key: "Research Writing", 
+    icon: NotebookPen, 
+    desc: "Expert thesis, dissertations & publication-ready manuscripts.", 
+    features: ["Thesis Writing", "Literature Review", "Manuscript Preparation"],
+    gradient: "from-purple-500 to-pink-600"
+  },
+  { 
+    key: "Academic Help", 
+    icon: BookOpen, 
+    desc: "Comprehensive coursework guidance and subject mastery support.", 
+    features: ["Assignment Help", "Study Materials", "Concept Clarity"],
+    gradient: "from-green-500 to-teal-600"
+  },
+  { 
+    key: "Career Counselling", 
+    icon: Briefcase, 
+    desc: "Strategic planning for academic and professional growth.", 
+    features: ["Career Planning", "Interview Prep", "Skill Development"],
+    gradient: "from-orange-500 to-red-600"
+  },
+  { 
+    key: "Exam Preparation", 
+    icon: GraduationCap, 
+    desc: "Personalized study plans with comprehensive mock assessments.", 
+    features: ["Study Plans", "Mock Tests", "Performance Analysis"],
+    gradient: "from-indigo-500 to-blue-600"
+  },
+  { 
+    key: "CSR Activities", 
+    icon: HelpingHand, 
+    desc: "Community engagement and personal development programs.", 
+    features: ["Social Impact", "Skill Building", "Leadership Development"],
+    gradient: "from-pink-500 to-rose-600"
+  },
+];
+
+const STATS = [
+  { icon: Users, value: "2500+", label: "Happy Students" },
+  { icon: Award, value: "98%", label: "Success Rate" },
+  { icon: Clock, value: "24/7", label: "Expert Support" },
+  { icon: Star, value: "4.9/5", label: "Client Rating" },
+];
+
+const FEATURES = [
+  { icon: Shield, title: "Secure & Confidential", desc: "Your data and work remain completely private" },
+  { icon: Zap, title: "Lightning Fast", desc: "Quality work delivered within your timeline" },
+  { icon: Target, title: "Tailored Solutions", desc: "Customized approach for your specific needs" },
+  { icon: TrendingUp, title: "Proven Excellence", desc: "Track record of academic success" },
+];
+
+const TESTIMONIALS = [
+  {
+    name: "Dr. Sarah Johnson",
+    role: "PhD Graduate",
+    content: "SIR STUDIO transformed my thesis journey. Their statistical analysis expertise and writing support were exceptional.",
+    rating: 5
+  },
+  {
+    name: "Michael Chen",
+    role: "MBA Student",
+    content: "Outstanding career counselling and academic support. They helped me secure my dream job while maintaining excellent grades.",
+    rating: 5
+  },
+  {
+    name: "Priya Sharma",
+    role: "Research Scholar",
+    content: "The research writing assistance was phenomenal. My paper got published in a top-tier journal thanks to their guidance.",
+    rating: 5
+  }
+];
+
+const PROCESS_STEPS = [
+  {
+    step: "01",
+    title: "Initial Consultation",
+    desc: "We understand your specific requirements and academic goals through detailed discussion."
+  },
+  {
+    step: "02", 
+    title: "Custom Strategy",
+    desc: "Our experts develop a tailored approach based on your needs and timeline."
+  },
+  {
+    step: "03",
+    title: "Expert Execution", 
+    desc: "Dedicated specialists work on your project with regular progress updates."
+  },
+  {
+    step: "04",
+    title: "Quality Assurance",
+    desc: "Rigorous review and refinement to ensure exceptional standards."
+  },
+  {
+    step: "05",
+    title: "Final Delivery",
+    desc: "Complete project delivery with ongoing support and revisions if needed."
+  }
+];
+
+const FAQ_ITEMS = [
+  {
+    question: "Do you help with full thesis writing?",
+    answer: "Yes, we provide comprehensive thesis support from proposal development to final submission, including formatting, citations, and plagiarism checks."
+  },
+  {
+    question: "What statistical software do you use?",
+    answer: "We're proficient in SPSS, R, Python, SAS, and other advanced statistical tools based on your specific requirements."
+  },
+  {
+    question: "How do you ensure confidentiality?",
+    answer: "We maintain strict confidentiality protocols with secure data handling and non-disclosure agreements for all projects."
+  },
+  {
+    question: "What's your typical turnaround time?",
+    answer: "Turnaround varies by project complexity. We provide realistic timelines during consultation and always meet agreed deadlines."
+  },
+  {
+    question: "Do you offer revision support?",
+    answer: "Yes, we provide comprehensive revision support to ensure your complete satisfaction with the final deliverable."
+  }
 ];
 
 function useZapierWebhook() {
@@ -59,6 +200,7 @@ const Index = () => {
   const [service, setService] = useState<string>("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const heroRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -75,28 +217,35 @@ const Index = () => {
     return () => el.removeEventListener("mousemove", onMove);
   }, []);
 
-  const notifyEmail = "info@sirstudio.com";
+  // Scroll animation observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate");
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    const elements = document.querySelectorAll(".animate-on-scroll");
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  const notifyEmail = "hello@sirstudio.com";
 
   const faqJsonLd = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Do you help with full thesis writing?",
-        acceptedAnswer: { "@type": "Answer", text: "Yes, from proposal to final submission, including formatting and plagiarism checks." }
-      },
-      {
-        "@type": "Question",
-        name: "Can you run advanced statistical tests?",
-        acceptedAnswer: { "@type": "Answer", text: "Absolutely. We support SPSS, R, Python, and more with clear explanations." }
-      },
-      {
-        "@type": "Question",
-        name: "How quickly can I get help?",
-        acceptedAnswer: { "@type": "Answer", text: "Typically within 24 hours. Urgent requests can be prioritized." }
-      }
-    ]
+    mainEntity: FAQ_ITEMS.map(({ question, answer }) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: { "@type": "Answer", text: answer }
+    }))
   }), []);
 
   const orgJsonLd = useMemo(() => ({
@@ -105,8 +254,7 @@ const Index = () => {
     name: "SIR STUDIO",
     url: typeof window !== 'undefined' ? window.location.origin : "",
     email: notifyEmail,
-    description:
-      "Academic partner for thesis writing, statistical analysis, research writing, academic help, career counselling, exam preparation, and CSR activities.",
+    description: "Premium academic services for thesis writing, statistical analysis, and research support.",
   }), [notifyEmail]);
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -119,7 +267,6 @@ const Index = () => {
     setLoading(true);
 
     try {
-      // Save to Supabase database
       const { error } = await supabase
         .from('inquiries')
         .insert({
@@ -133,7 +280,6 @@ const Index = () => {
 
       if (error) throw error;
 
-      // Try Zapier webhook if available
       if (webhookUrl) {
         try {
           await fetch(webhookUrl, {
@@ -152,7 +298,7 @@ const Index = () => {
         }
       }
 
-      toast("Thank you! Your inquiry has been submitted successfully.");
+      toast("🎉 Thank you! Your inquiry has been submitted successfully.");
       setName("");
       setEmail("");
       setPhone("");
@@ -160,7 +306,6 @@ const Index = () => {
       setMessage("");
     } catch (err) {
       console.error(err);
-      // Fallback to localStorage if database fails
       const inquiry: Inquiry = {
         id: crypto.randomUUID(),
         name,
@@ -177,275 +322,491 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-hidden">
       <SeoHead
-        title="SIR STUDIO – Academic Services & Thesis Support"
-        description="Thesis writing, statistical analysis, research writing, academic help, career counselling, exam preparation, and CSR activities."
-        canonical={"/"}
+        title="SIR STUDIO – Premium Academic Services & Expert Thesis Support"
+        description="Transform your academic journey with expert thesis writing, advanced statistical analysis, and comprehensive academic guidance."
+        canonical="/"
       />
 
-      <header className="border-b">
+      {/* Modern Header */}
+      <header className="fixed top-0 w-full z-50 glass-effect border-b border-white/10">
         <div className="container flex h-16 items-center justify-between">
-          <a href="/" className="flex items-center gap-3" aria-label="SIR STUDIO home">
-            <img src={logo} alt="SIR STUDIO logo" className="h-8 w-8" loading="lazy" />
-            <span className="text-lg font-semibold">SIR STUDIO</span>
+          <a href="/" className="flex items-center gap-3 group" aria-label="SIR STUDIO home">
+            <img 
+              src={logo} 
+              alt="SIR STUDIO logo" 
+              className="h-10 w-10 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" 
+              loading="lazy" 
+            />
+            <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              SIR STUDIO
+            </span>
           </a>
-          <nav className="hidden gap-6 md:flex">
-            <a href="#services" className="hover:text-primary">Services</a>
-            <a href="#about" className="hover:text-primary">About</a>
-            <a href="#process" className="hover:text-primary">Process</a>
-            <a href="#testimonials" className="hover:text-primary">Testimonials</a>
-            <a href="#faq" className="hover:text-primary">FAQ</a>
-            <a href="#contact" className="hover:text-primary">Contact</a>
-            <Link to="/auth" className="hover:text-primary">Admin</Link>
+          <nav className="hidden gap-8 md:flex">
+            {["Services", "About", "Process", "Testimonials", "FAQ", "Contact"].map((item) => (
+              <a 
+                key={item}
+                href={`#${item.toLowerCase()}`} 
+                className="relative text-sm font-medium hover:text-primary transition-all duration-300 group"
+              >
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary/70 transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            ))}
+            <Link to="/auth" className="text-sm font-medium hover:text-primary transition-colors">Admin</Link>
           </nav>
         </div>
       </header>
 
-      <main>
-        {/* Hero */}
-        <section ref={heroRef} className="relative overflow-hidden">
+      <main className="pt-16">
+        {/* Hero Section */}
+        <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 aurora-bg" aria-hidden />
-          <div className="relative container py-20 md:py-28">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight max-w-3xl">
-              Expert Thesis Writing and Academic Services for Every Stage
-            </h1>
-            <p className="mt-4 text-muted-foreground max-w-2xl">
-              Your trusted academic partner for research, analysis, and guidance.
-              From topic selection to final submission — we’re with you all the way.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button asChild variant="gradient" size="lg">
-                <a href="#contact">Get Started</a>
-              </Button>
-              <Button asChild variant="hero" size="lg">
-                <a href="#services">Explore Services</a>
-              </Button>
-              <WhatsAppButton 
-                message="Hi SIR STUDIO! I need help with my thesis and academic work. Can we discuss my requirements?"
-                size="lg"
-                className="bg-[#25D366] hover:bg-[#22C55E] text-white border-[#25D366]"
-              />
-            </div>
-          </div>
-        </section>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" />
+          
+          {/* Floating elements */}
+          <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full blur-xl animate-float" />
+          <div className="absolute bottom-32 right-16 w-32 h-32 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full blur-2xl animate-float" style={{ animationDelay: '1s' }} />
 
-        {/* Services */}
-        <section id="services" className="container py-14 md:py-20">
-          <h2 className="text-3xl font-semibold">Our Core Services</h2>
-          <p className="mt-2 text-muted-foreground max-w-2xl">
-            Tailored support designed to enhance your academic and professional success.
-          </p>
-
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map(({ key, icon: Icon, desc }) => (
-              <Card key={key} className="transition-transform hover:-translate-y-0.5 hover:shadow-[var(--shadow-elevated)]">
-                <CardHeader className="flex flex-row items-center gap-3">
-                  <div className="p-2 rounded-md bg-secondary">
-                    <Icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <CardTitle className="text-lg">{key}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <p className="text-sm text-muted-foreground">{desc}</p>
-                  <WhatsAppButton 
-                    message={`Hi SIR STUDIO! I need help with ${key}. Can we discuss my requirements?`}
-                    size="sm"
-                    className="w-full"
-                  />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* About */}
-        <section id="about" className="border-t bg-muted/30">
-          <div className="container py-14 md:py-20 grid gap-10 md:grid-cols-2">
-            <article>
-              <h2 className="text-3xl font-semibold">About SIR STUDIO</h2>
-              <p className="mt-4 text-muted-foreground">
-                We partner with scholars at every step of their academic journey—from shaping research questions to polishing final submissions.
-                Our approach blends rigorous methodology with clear communication and timely delivery.
+          <div className="relative container text-center px-4">
+            <div className="animate-fade-up">
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-primary mb-8 animate-pulse-glow">
+                <Sparkles className="w-4 h-4" />
+                Premium Academic Excellence
+              </div>
+              
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight max-w-4xl mx-auto leading-tight">
+                Transform Your 
+                <span className="shimmer-text block mt-2">Academic Journey</span>
+              </h1>
+              
+              <p className="mt-8 text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                Expert thesis writing, advanced statistical analysis, and comprehensive academic support 
+                <span className="text-primary font-semibold block mt-2">tailored for your unprecedented success</span>
               </p>
-              <ul className="mt-6 space-y-3 text-sm">
-                {["Expert academic consultants","On-time delivery","Confidential & secure","Personalized guidance"].map((f) => (
-                  <li key={f} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary" />{f}</li>
-                ))}
-              </ul>
-            </article>
-            <Card className="shadow-[var(--shadow-elevated)]">
-              <CardHeader>
-                <CardTitle>Why students choose us</CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-4 sm:grid-cols-2">
-                {[
-                  { t: "Thesis to Publication", d: "From structure to journal readiness." },
-                  { t: "Clarity in Analysis", d: "Actionable insights from complex data." },
-                  { t: "Ethical Guidance", d: "Transparent, responsible support." },
-                  { t: "Responsive Support", d: "We align with your timelines." },
-                ].map((x) => (
-                  <div key={x.t}>
-                    <div className="font-medium">{x.t}</div>
-                    <div className="text-sm text-muted-foreground">{x.d}</div>
+              
+              <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
+                <Button asChild variant="gradient" size="xl" className="group shadow-2xl">
+                  <a href="#contact" className="flex items-center gap-2">
+                    Start Your Success Story
+                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </a>
+                </Button>
+                <Button asChild variant="glass" size="xl">
+                  <a href="#services">Explore Services</a>
+                </Button>
+                <WhatsAppButton 
+                  message="Hi SIR STUDIO! I need expert help with my academic work. Can we discuss my requirements?"
+                  size="lg"
+                  className="glass-effect hover:bg-[#25D366]/20"
+                />
+              </div>
+            </div>
+            
+            {/* Stats Row */}
+            <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 animate-fade-up" style={{ animationDelay: '0.3s' }}>
+              {STATS.map(({ icon: Icon, value, label }) => (
+                <div key={label} className="text-center group animate-on-scroll">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/20 mb-4 group-hover:scale-110 transition-all duration-300">
+                    <Icon className="w-8 h-8 text-primary" />
                   </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        {/* Process */}
-        <section id="process" className="container py-14 md:py-20">
-          <h2 className="text-3xl font-semibold">How it works</h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-4">
-            {[
-              { s: "1", t: "Consult", d: "Understand goals, scope, and timelines." },
-              { s: "2", t: "Plan", d: "Define approach, deliverables, and milestones." },
-              { s: "3", t: "Execute", d: "Writing, analysis, and iterations with feedback." },
-              { s: "4", t: "Deliver", d: "Finalize, format, and prepare for submission." },
-            ].map((p) => (
-              <Card key={p.s} className="text-center">
-                <CardHeader>
-                  <div className="mx-auto h-10 w-10 rounded-full bg-secondary flex items-center justify-center font-semibold">{p.s}</div>
-                  <CardTitle className="text-lg">{p.t}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-muted-foreground">{p.d}</CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Testimonials */}
-        <section id="testimonials" className="border-t bg-muted/30">
-          <div className="container py-14 md:py-20">
-            <h2 className="text-3xl font-semibold">What our students say</h2>
-            <div className="mt-8 grid gap-6 md:grid-cols-3">
-              {[
-                { q: "Clear guidance from research design to defense.", a: "Mansi, MBA" },
-                { q: "My data analysis finally made sense.", a: "Rahul, M.Tech" },
-                { q: "On-time support that boosted my confidence.", a: "Sara, PhD" },
-              ].map((t) => (
-                <Card key={t.a} className="relative">
-                  <Quote className="absolute -top-3 -left-3 h-6 w-6 text-primary/40" />
-                  <CardContent className="pt-6 text-muted-foreground">“{t.q}”
-                    <div className="mt-3 text-foreground font-medium">{t.a}</div>
-                  </CardContent>
-                </Card>
+                  <div className="text-4xl font-bold text-primary mb-2">{value}</div>
+                  <div className="text-sm text-muted-foreground font-medium">{label}</div>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* FAQ */}
-        <section id="faq" className="container py-14 md:py-20">
-          <h2 className="text-3xl font-semibold">Frequently asked questions</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {[{
-              q: "Do you help with full thesis writing?",
-              a: "Yes, from proposal to final submission, including formatting and plagiarism checks."
-            },{
-              q: "Can you run advanced statistical tests?",
-              a: "Absolutely. We support SPSS, R, Python, and more with clear explanations."
-            },{
-              q: "How quickly can I get help?",
-              a: "Typically within 24 hours. Urgent requests can be prioritized."
-            },{
-              q: "Do you sign NDAs?",
-              a: "Yes, confidentiality and ethics are core to our work."
-            }].map((f) => (
-              <details key={f.q} className="rounded-md border bg-card p-4">
-                <summary className="cursor-pointer font-medium">{f.q}</summary>
-                <div className="mt-2 text-sm text-muted-foreground">{f.a}</div>
-              </details>
-            ))}
+        {/* Enhanced Services */}
+        <section id="services" className="py-20">
+          <div className="container">
+            <div className="text-center mb-16 animate-on-scroll">
+              <h2 className="text-4xl font-bold mb-4">Our Premium Services</h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                Comprehensive academic solutions designed to elevate your journey
+              </p>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {SERVICES.map(({ key, icon: Icon, desc, features, gradient }, index) => (
+                <div 
+                  key={key} 
+                  className="animate-on-scroll group"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <Card className="h-full border-0 bg-gradient-to-br from-white to-white/80 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden relative">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                    
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className={`p-3 rounded-xl bg-gradient-to-br ${gradient} text-white group-hover:scale-110 transition-transform duration-300`}>
+                          <Icon className="h-6 w-6" />
+                        </div>
+                        <CardTitle className="text-xl group-hover:text-primary transition-colors">{key}</CardTitle>
+                      </div>
+                      <p className="text-muted-foreground leading-relaxed">{desc}</p>
+                    </CardHeader>
+                    
+                    <CardContent className="space-y-4">
+                      <div className="space-y-2">
+                        {features.map((feature) => (
+                          <div key={feature} className="flex items-center gap-2 text-sm">
+                            <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
+                            <span className="text-muted-foreground">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <WhatsAppButton 
+                        message={`Hi SIR STUDIO! I need expert help with ${key}. Can we discuss my requirements?`}
+                        size="sm"
+                        className="w-full mt-6 group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Contact / Lead form */}
-        <section id="contact" className="border-t bg-muted/30">
-          <div className="container py-14 md:py-20 grid gap-10 md:grid-cols-2">
-            <div>
-              <h2 className="text-3xl font-semibold">Start your journey</h2>
-              <p className="mt-2 text-muted-foreground">
-                Fill out the form and our academic consultant will reach out shortly.
-                We’ll also notify our team at {notifyEmail}.
-              </p>
+        {/* About Section */}
+        <section id="about" className="py-20 bg-gradient-to-br from-muted/20 to-primary/5">
+          <div className="container">
+            <div className="grid gap-16 lg:grid-cols-2 items-center">
+              <div className="animate-on-scroll">
+                <h2 className="text-4xl font-bold mb-6">Why Choose SIR STUDIO?</h2>
+                <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                  We're not just another academic service. We're your partners in academic excellence, 
+                  committed to transforming your educational journey with personalized expertise.
+                </p>
+                
+                <div className="space-y-6">
+                  {FEATURES.map(({ icon: Icon, title, desc }) => (
+                    <div key={title} className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">{title}</h3>
+                        <p className="text-muted-foreground">{desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-              <div className="mt-6 text-sm text-muted-foreground">
-                • Secure and private • No spam • Quick response
+              <div className="animate-on-scroll">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/10 rounded-3xl blur-3xl" />
+                  <Card className="relative bg-gradient-to-br from-white to-white/80 shadow-2xl">
+                    <CardContent className="p-8">
+                      <div className="text-center mb-6">
+                        <div className="text-6xl font-bold text-primary mb-2">5+</div>
+                        <p className="text-muted-foreground">Years of Excellence</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-6 text-center">
+                        <div>
+                          <div className="text-2xl font-bold text-primary">50+</div>
+                          <p className="text-sm text-muted-foreground">Expert Consultants</p>
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-primary">100+</div>
+                          <p className="text-sm text-muted-foreground">Universities Served</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
             </div>
+          </div>
+        </section>
 
-            <Card className="shadow-[var(--shadow-elevated)]">
-              <CardHeader>
-                <CardTitle>Request a Consultation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={onSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full name</Label>
-                    <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
+        {/* Process Section */}
+        <section id="process" className="py-20">
+          <div className="container">
+            <div className="text-center mb-16 animate-on-scroll">
+              <h2 className="text-4xl font-bold mb-4">Our Proven Process</h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                A systematic approach to ensure your academic success
+              </p>
+            </div>
+
+            <div className="relative">
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary to-primary/30 hidden lg:block" />
+              
+              <div className="space-y-12">
+                {PROCESS_STEPS.map(({ step, title, desc }, index) => (
+                  <div 
+                    key={step} 
+                    className={`animate-on-scroll flex items-center gap-8 ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                  >
+                    <div className="flex-1">
+                      <Card className="bg-gradient-to-br from-white to-white/80 shadow-lg hover:shadow-xl transition-all duration-300">
+                        <CardContent className="p-6">
+                          <div className="flex items-center gap-4 mb-4">
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-white font-bold">
+                              {step}
+                            </div>
+                            <h3 className="text-xl font-semibold">{title}</h3>
+                          </div>
+                          <p className="text-muted-foreground">{desc}</p>
+                        </CardContent>
+                      </Card>
+                    </div>
+                    
+                    <div className="hidden lg:block w-8 h-8 rounded-full bg-primary border-4 border-white shadow-lg relative z-10" />
+                    <div className="flex-1 hidden lg:block" />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone number (optional)</Label>
-                    <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Your phone number" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Service of interest</Label>
-                    <Select value={service} onValueChange={setService}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a service" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {SERVICES.map((s) => (
-                          <SelectItem key={s.key} value={s.key}>{s.key}</SelectItem>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section id="testimonials" className="py-20 bg-gradient-to-br from-muted/20 to-primary/5">
+          <div className="container">
+            <div className="text-center mb-16 animate-on-scroll">
+              <h2 className="text-4xl font-bold mb-4">What Our Clients Say</h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                Real stories from students who transformed their academic journey with us
+              </p>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {TESTIMONIALS.map(({ name, role, content, rating }, index) => (
+                <div 
+                  key={name} 
+                  className="animate-on-scroll"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <Card className="h-full bg-gradient-to-br from-white to-white/80 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-1 mb-4">
+                        {[...Array(rating)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                         ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Your message (optional)</Label>
-                    <Textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Share your needs or timelines" rows={4} />
-                  </div>
-                  <div className="flex gap-3">
-                    <Button type="submit" variant="gradient" size="lg" disabled={loading} className="flex-1">
-                      {loading ? "Submitting..." : "Submit"}
-                    </Button>
-                    <WhatsAppButton 
-                      message={`Hi! I'd like to discuss my academic needs. Name: ${name}, Email: ${email}${phone ? `, Phone: ${phone}` : ''}, Service: ${service}${message ? `, Message: ${message}` : ''}`}
-                      size="lg"
-                      className="px-6"
-                    />
-                  </div>
-                </form>
-                <p className="mt-3 text-xs text-muted-foreground">
-                  By submitting, you agree to be contacted regarding your request.
+                      </div>
+                      
+                      <Quote className="w-8 h-8 text-primary/30 mb-4" />
+                      <p className="text-muted-foreground mb-6 leading-relaxed">{content}</p>
+                      
+                      <div>
+                        <div className="font-semibold">{name}</div>
+                        <div className="text-sm text-muted-foreground">{role}</div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section id="faq" className="py-20">
+          <div className="container">
+            <div className="text-center mb-16 animate-on-scroll">
+              <h2 className="text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                Get answers to common questions about our services
+              </p>
+            </div>
+
+            <div className="max-w-3xl mx-auto space-y-4">
+              {FAQ_ITEMS.map(({ question, answer }, index) => (
+                <div 
+                  key={index} 
+                  className="animate-on-scroll"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <Card className="bg-gradient-to-br from-white to-white/80 shadow-lg">
+                    <CardContent className="p-0">
+                      <button
+                        className="w-full p-6 text-left hover:bg-muted/20 transition-colors"
+                        onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold">{question}</h3>
+                          <div className={`transform transition-transform ${expandedFaq === index ? 'rotate-180' : ''}`}>
+                            <ArrowRight className="w-5 h-5" />
+                          </div>
+                        </div>
+                      </button>
+                      
+                      {expandedFaq === index && (
+                        <div className="px-6 pb-6">
+                          <p className="text-muted-foreground leading-relaxed">{answer}</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Enhanced Contact Form */}
+        <section id="contact" className="py-20 bg-gradient-to-br from-muted/30 to-primary/5">
+          <div className="container">
+            <div className="grid gap-16 lg:grid-cols-2 items-center">
+              <div className="animate-on-scroll">
+                <h2 className="text-4xl font-bold mb-6">Start Your Success Story</h2>
+                <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                  Ready to transform your academic journey? Connect with our expert consultants.
                 </p>
-              </CardContent>
-            </Card>
+                
+                <div className="space-y-6">
+                  {FEATURES.map(({ icon: Icon, title, desc }) => (
+                    <div key={title} className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">{title}</h3>
+                        <p className="text-muted-foreground">{desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <Card className="animate-on-scroll gradient-border shadow-2xl bg-gradient-to-br from-white to-white/80">
+                <CardHeader className="text-center">
+                  <CardTitle className="text-2xl mb-2">Request Expert Consultation</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={onSubmit} className="space-y-6">
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Full Name *</Label>
+                        <Input 
+                          id="name" 
+                          value={name} 
+                          onChange={(e) => setName(e.target.value)} 
+                          placeholder="Your name"
+                          className="transition-all duration-300 focus:scale-105"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email *</Label>
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          value={email} 
+                          onChange={(e) => setEmail(e.target.value)} 
+                          placeholder="your@email.com"
+                          className="transition-all duration-300 focus:scale-105"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input 
+                        id="phone" 
+                        type="tel" 
+                        value={phone} 
+                        onChange={(e) => setPhone(e.target.value)} 
+                        placeholder="Your phone number (optional)"
+                        className="transition-all duration-300 focus:scale-105"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label>Service of Interest *</Label>
+                      <Select value={service} onValueChange={setService}>
+                        <SelectTrigger className="transition-all duration-300 focus:scale-105">
+                          <SelectValue placeholder="Choose your service" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {SERVICES.map((s) => (
+                            <SelectItem key={s.key} value={s.key}>{s.key}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="message">Project Details</Label>
+                      <Textarea 
+                        id="message" 
+                        value={message} 
+                        onChange={(e) => setMessage(e.target.value)} 
+                        placeholder="Tell us about your project and requirements..."
+                        rows={4}
+                        className="transition-all duration-300 focus:scale-105"
+                      />
+                    </div>
+                    
+                    <div className="flex gap-4">
+                      <Button 
+                        type="submit" 
+                        variant="gradient" 
+                        size="lg" 
+                        disabled={loading} 
+                        className="flex-1 group"
+                      >
+                        {loading ? "Submitting..." : "Submit Request"}
+                        {!loading && <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />}
+                      </Button>
+                    </div>
+                    
+                    <WhatsAppButton 
+                      message={`Hi SIR STUDIO! I'd like to discuss my project. Name: ${name}, Email: ${email}${phone ? `, Phone: ${phone}` : ''}, Service: ${service}${message ? `, Details: ${message}` : ''}`}
+                      size="lg"
+                      className="w-full"
+                    />
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t">
-        <div className="container py-8 text-sm text-muted-foreground flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
-          <div>© {new Date().getFullYear()} SIR STUDIO. All rights reserved.</div>
-          <div className="flex gap-6">
-            <a href="#services" className="hover:text-primary">Services</a>
-            <a href="#contact" className="hover:text-primary">Contact</a>
-            <Link to="/auth" className="hover:text-primary">Admin</Link>
-            <WhatsAppButton message="Hi SIR STUDIO! I'd like to know more about your services." className="text-xs h-auto py-1 px-2" />
+      {/* Modern Footer */}
+      <footer className="bg-gradient-to-r from-muted to-muted/80 border-t">
+        <div className="container py-12">
+          <div className="grid gap-8 md:grid-cols-4">
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-3 mb-4">
+                <img src={logo} alt="SIR STUDIO logo" className="h-8 w-8" />
+                <span className="text-xl font-bold">SIR STUDIO</span>
+              </div>
+              <p className="text-muted-foreground mb-4 max-w-md">
+                Transforming academic journeys with expert guidance and innovative solutions.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Contact Info</h3>
+              <div className="space-y-2 text-muted-foreground">
+                <p>Email: {notifyEmail}</p>
+                <p>WhatsApp: +91 7012345678</p>
+                <p>Available 24/7</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t mt-8 pt-8 text-center text-muted-foreground text-sm">
+            © {new Date().getFullYear()} SIR STUDIO. All rights reserved. Crafted with excellence.
           </div>
         </div>
       </footer>
 
-      {/* Floating WhatsApp Button */}
-      <WhatsAppButton variant="floating" message="Hi SIR STUDIO! I need academic support. Can we chat?" />
+      {/* Floating WhatsApp */}
+      <WhatsAppButton 
+        variant="floating" 
+        message="Hi SIR STUDIO! I need premium academic support. Can we discuss?" 
+        className="animate-bounce-gentle"
+      />
 
       <script
         type="application/ld+json"

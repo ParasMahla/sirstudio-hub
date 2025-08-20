@@ -58,11 +58,14 @@ All colors MUST be HSL. */
     --gradient-primary: linear-gradient(135deg, hsl(var(--brand)), hsl(var(--brand-2)));
     --gradient-hero: radial-gradient(600px circle at var(--cursor-x, 50%) var(--cursor-y, 50%), hsl(var(--brand) / 0.18), transparent 60%),
                      radial-gradient(800px circle at 80% 20%, hsl(var(--brand-2) / 0.12), transparent 50%);
+    --gradient-mesh: conic-gradient(from 0deg at 50% 50%, hsl(var(--brand)) 0deg, hsl(var(--brand-2)) 90deg, hsl(var(--brand)) 180deg, hsl(var(--brand-2)) 270deg, hsl(var(--brand)) 360deg);
 
     /* Shadows & transitions */
     --shadow-elevated: 0 10px 30px -12px hsl(var(--brand) / 0.35);
     --shadow-glow: 0 0 40px hsl(var(--brand-2) / 0.35);
+    --shadow-soft: 0 4px 20px -4px hsl(var(--foreground) / 0.1);
     --transition-smooth: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
   .dark {
@@ -125,7 +128,47 @@ All colors MUST be HSL. */
     transition: var(--transition-smooth);
   }
 
+  /* Modern animation classes */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-on-scroll.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .shimmer-text {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted-foreground)) 0%,
+      hsl(var(--primary)) 50%,
+      hsl(var(--muted-foreground)) 100%
+    );
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  .gradient-border {
+    background: linear-gradient(hsl(var(--background)), hsl(var(--background))) padding-box,
+                var(--gradient-primary) border-box;
+    border: 2px solid transparent;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .aurora-bg { background-image: none; }
+    .animate-on-scroll { opacity: 1; transform: none; }
+    * { animation-duration: 0.01ms !important; }
   }
 }
