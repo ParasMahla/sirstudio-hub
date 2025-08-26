@@ -131,7 +131,7 @@ const AdminNew = () => {
         mode: "no-cors",
         body: JSON.stringify({
           type: "resend_inquiry",
-          toEmail: "info@sirstudio.com",
+          toEmail: "info@sirstudio.in",
           payload: inquiry,
           source: "admin_resend",
         }),
@@ -249,7 +249,7 @@ const AdminNew = () => {
                   <Label>Email Notifications</Label>
                   <Input
                     type="email"
-                    value="info@sirstudio.com"
+                    value="info@sirstudio.in"
                     readOnly
                     className="bg-muted"
                   />

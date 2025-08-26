@@ -236,7 +236,7 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
-  const notifyEmail = "hello@sirstudio.com";
+  const notifyEmail = "info@sirstudio.in";
 
   const faqJsonLd = useMemo(() => ({
     "@context": "https://schema.org",
