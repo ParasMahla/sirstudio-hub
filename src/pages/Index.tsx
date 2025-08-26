@@ -789,7 +789,7 @@ const Index = () => {
               <h3 className="font-semibold mb-4">Contact Info</h3>
               <div className="space-y-2 text-muted-foreground">
                 <p>Email: {notifyEmail}</p>
-                <p>WhatsApp: +91 7012345678</p>
+                <p>WhatsApp: +91 7297980809</p>
                 <p>Available 24/7</p>
               </div>
             </div>

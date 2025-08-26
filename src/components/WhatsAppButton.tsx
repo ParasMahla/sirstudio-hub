@@ -8,7 +8,7 @@ interface WhatsAppButtonProps {
   className?: string;
 }
 
-const WHATSAPP_NUMBER = "+917012345678"; // Updated modern contact number
+const WHATSAPP_NUMBER = "+917297980809"; // Updated modern contact number
 
 const WhatsAppButton = ({ 
   message = "Hi SIR STUDIO! I'm interested in learning more about your academic services.", 

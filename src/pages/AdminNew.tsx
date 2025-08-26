@@ -266,7 +266,7 @@ const AdminNew = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">
-                WhatsApp click-to-chat is active with number: <strong>+91 94609 80809</strong>
+                WhatsApp click-to-chat is active with number: <strong>+91 7297980809</strong>
               </p>
               <div className="flex gap-2">
                 <WhatsAppButton 
@@ -274,7 +274,7 @@ const AdminNew = () => {
                   size="sm"
                 />
                 <Button variant="outline" size="sm" asChild>
-                  <a href="https://wa.me/919460980809" target="_blank" rel="noopener noreferrer">
+                  <a href="https://wa.me/917297980809" target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="mr-2 h-4 w-4" />
                     Open WhatsApp Web
                   </a>
